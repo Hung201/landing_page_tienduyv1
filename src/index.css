@@ -19,3 +19,22 @@ body {
   margin: 0;
   color: #1f2937;
 }
+
+@keyframes chat-widget-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  70% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+.chat-widget-pulse {
+  animation: chat-widget-pulse 2s ease-out infinite;
+}
