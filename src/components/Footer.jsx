@@ -26,9 +26,8 @@ export default function Footer() {
     <footer className="bg-vibez-navy text-white">
       <div className="mx-auto max-w-6xl px-6 py-10">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <Link to="/" className="text-2xl font-extrabold">
-            <span className="text-vibez-orange">Vibe</span>
-            <span className="text-white">Z</span>
+          <Link to="/" className="text-2xl font-extrabold text-vibez-orange">
+            VibeZ
           </Link>
           <nav className="flex flex-wrap gap-6 text-sm font-medium">
             {links.map(({ to, label }) => (
