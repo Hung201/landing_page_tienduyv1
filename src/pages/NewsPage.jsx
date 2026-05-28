@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Layout from '../components/Layout.jsx'
-import { NEWS_ITEMS } from '../data/news.js'
+import PageLoader from '../components/PageLoader.jsx'
+import { fetchNews } from '../lib/content.js'
 
 const CAROUSEL_DOTS = 5
 const VISIBLE_CARDS = 3
@@ -41,12 +42,24 @@ function ReadMoreButton({ to }) {
 export default function NewsPage() {
   const [slide, setSlide] = useState(0)
   const [page, setPage] = useState(1)
+  const [news, setNews] = useState(null)
 
-  const featuredCarousel = NEWS_ITEMS.slice(0, Math.max(VISIBLE_CARDS, 3))
-  const otherNews = NEWS_ITEMS
-  const [featuredArticle, ...listArticles] = otherNews
+  useEffect(() => {
+    fetchNews().then(setNews)
+  }, [])
 
-  const visibleCards = Array.from({ length: VISIBLE_CARDS }, (_, i) => {
+  if (!news) {
+    return (
+      <Layout>
+        <PageLoader />
+      </Layout>
+    )
+  }
+
+  const featuredCarousel = news.length >= 3 ? news : news
+  const [featuredArticle, ...listArticles] = news
+
+  const visibleCards = Array.from({ length: Math.min(VISIBLE_CARDS, featuredCarousel.length) }, (_, i) => {
     const idx = (slide + i) % featuredCarousel.length
     return featuredCarousel[idx]
   })
@@ -56,7 +69,6 @@ export default function NewsPage() {
 
   return (
     <Layout>
-      {/* Hero */}
       <section className="bg-gradient-to-r from-vibez-dark via-vibez-navy to-vibez-orange px-6 py-14 md:py-16">
         <div className="mx-auto max-w-7xl">
           <h1 className="text-3xl font-bold text-white md:text-4xl lg:text-5xl">Tin tức</h1>
@@ -64,7 +76,6 @@ export default function NewsPage() {
         </div>
       </section>
 
-      {/* Tin nổi bật — carousel */}
       <section className="bg-vibez-warm px-4 py-14 sm:px-6 md:py-20">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-center font-serif text-3xl font-bold text-vibez-navy md:text-4xl">
@@ -75,7 +86,7 @@ export default function NewsPage() {
             <button
               type="button"
               onClick={prevSlide}
-              className="absolute -left-1 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-gray-300 bg-white text-xl text-gray-600 shadow-sm transition hover:bg-gray-50 sm:left-0 md:-left-4"
+              className="absolute -left-1 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-gray-300 bg-white text-xl text-gray-600 shadow-sm sm:left-0 md:-left-4"
               aria-label="Tin trước"
             >
               ‹
@@ -101,7 +112,7 @@ export default function NewsPage() {
             <button
               type="button"
               onClick={nextSlide}
-              className="absolute -right-1 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-gray-900 text-xl text-white shadow-sm transition hover:bg-gray-800 sm:right-0 md:-right-4"
+              className="absolute -right-1 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-gray-900 text-xl text-white shadow-sm sm:right-0 md:-right-4"
               aria-label="Tin sau"
             >
               ›
@@ -124,7 +135,6 @@ export default function NewsPage() {
         </div>
       </section>
 
-      {/* Tin khác */}
       <section className="bg-vibez-warm px-4 pb-16 sm:px-6 md:pb-24">
         <div className="mx-auto max-w-3xl">
           <SectionDivider label="Tin Khác" />
@@ -159,12 +169,11 @@ export default function NewsPage() {
             ))}
           </div>
 
-          {/* Phân trang */}
           <nav className="mt-14 flex items-center justify-center gap-1.5 sm:gap-2" aria-label="Phân trang">
             <button
               type="button"
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 text-gray-400 transition hover:border-gray-400"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 text-gray-400"
               aria-label="Trang trước"
             >
               ‹
@@ -174,8 +183,8 @@ export default function NewsPage() {
                 key={p}
                 type="button"
                 onClick={() => setPage(p)}
-                className={`flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium transition ${
-                  page === p ? 'bg-gray-900 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                className={`flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium ${
+                  page === p ? 'bg-gray-900 text-white' : 'bg-gray-200 text-gray-800'
                 }`}
               >
                 {p}
@@ -187,8 +196,8 @@ export default function NewsPage() {
                 key={p}
                 type="button"
                 onClick={() => setPage(p)}
-                className={`flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium transition ${
-                  page === p ? 'bg-gray-900 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                className={`flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium ${
+                  page === p ? 'bg-gray-900 text-white' : 'bg-gray-200 text-gray-800'
                 }`}
               >
                 {p}
@@ -197,7 +206,7 @@ export default function NewsPage() {
             <button
               type="button"
               onClick={() => setPage((p) => p + 1)}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-900 text-white transition hover:bg-gray-800"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-900 text-white"
               aria-label="Trang sau"
             >
               ›

@@ -1,13 +1,23 @@
 import { useState } from 'react'
 import Layout from '../components/Layout.jsx'
+import { submitContactForm } from '../lib/content.js'
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
+  const [sending, setSending] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    alert('Cảm ơn bạn! Chúng tôi sẽ liên hệ sớm.')
-    setForm({ name: '', email: '', message: '' })
+    setSending(true)
+    try {
+      await submitContactForm(form)
+      alert('Cảm ơn bạn! Chúng tôi sẽ liên hệ sớm.')
+      setForm({ name: '', email: '', message: '' })
+    } catch (err) {
+      alert(err.message ?? 'Gửi thất bại. Vui lòng thử lại.')
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -81,9 +91,10 @@ export default function ContactPage() {
 
             <button
               type="submit"
-              className="mt-8 w-full rounded-xl bg-vibez-orange py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:opacity-90 sm:w-auto sm:px-12"
+              disabled={sending}
+              className="mt-8 w-full rounded-xl bg-vibez-orange py-3.5 text-sm font-bold uppercase tracking-wide text-white transition hover:opacity-90 disabled:opacity-60 sm:w-auto sm:px-12"
             >
-              Gửi liên hệ
+              {sending ? 'Đang gửi...' : 'Gửi liên hệ'}
             </button>
           </form>
         </div>

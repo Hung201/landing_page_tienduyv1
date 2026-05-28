@@ -1,11 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Layout from '../components/Layout.jsx'
-import {
-  FAQ_GROUPS,
-  FAQ_TABS,
-  FAQ_TOP_INTRO,
-  FAQ_TOP_ITEMS,
-} from '../data/support.js'
+import PageLoader from '../components/PageLoader.jsx'
+import { fetchSupportContent } from '../lib/content.js'
 
 function ChevronDown({ className }) {
   return (
@@ -45,6 +41,21 @@ function FaqExpandItem({ question, answer }) {
 
 export default function SupportPage() {
   const [tab, setTab] = useState(0)
+  const [content, setContent] = useState(null)
+
+  useEffect(() => {
+    fetchSupportContent().then(setContent)
+  }, [])
+
+  if (!content) {
+    return (
+      <Layout>
+        <PageLoader />
+      </Layout>
+    )
+  }
+
+  const { faqTopIntro, faqTopItems, faqTabs, faqGroups } = content
 
   return (
     <Layout>
@@ -66,9 +77,9 @@ export default function SupportPage() {
             <h2 className="mt-2 text-2xl font-bold uppercase text-gray-900 md:text-3xl">
               Câu hỏi thường gặp
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-gray-600">{FAQ_TOP_INTRO}</p>
+            <p className="mt-4 text-sm leading-relaxed text-gray-600">{faqTopIntro}</p>
             <div className="mt-6 space-y-2">
-              {FAQ_TOP_ITEMS.map((item) => (
+              {faqTopItems.map((item) => (
                 <details
                   key={item.id}
                   className="group rounded-lg border border-gray-200 bg-white"
@@ -98,8 +109,8 @@ export default function SupportPage() {
           <aside className="lg:w-56 lg:shrink-0">
             <div className="rounded-2xl bg-white p-3 shadow-sm">
               <ul className="flex flex-row flex-wrap gap-2 lg:flex-col lg:gap-2">
-                {FAQ_TABS.map((label, i) => (
-                  <li key={label} className="lg:w-full">
+                {faqTabs.map((t, i) => (
+                  <li key={t.id} className="lg:w-full">
                     <button
                       type="button"
                       onClick={() => setTab(i)}
@@ -109,7 +120,7 @@ export default function SupportPage() {
                           : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                       }`}
                     >
-                      {label}
+                      {t.label}
                     </button>
                   </li>
                 ))}
@@ -119,10 +130,10 @@ export default function SupportPage() {
 
           <div className="min-w-0 flex-1">
             <h2 className="font-serif text-3xl font-bold text-gray-900 md:text-4xl">Questions</h2>
-            <p className="mt-2 text-sm text-gray-500">{FAQ_TABS[tab]}</p>
+            <p className="mt-2 text-sm text-gray-500">{faqTabs[tab]?.label}</p>
 
-            {FAQ_GROUPS.map((group) => (
-              <div key={group.title} className="mt-10">
+            {faqGroups.map((group) => (
+              <div key={group.id ?? group.title} className="mt-10">
                 <h3 className="text-xl font-bold text-gray-900">{group.title}</h3>
                 <ul className="mt-4 space-y-3">
                   {group.items.map((item) => (

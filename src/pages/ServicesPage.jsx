@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Layout from '../components/Layout.jsx'
-import { SERVICES } from '../data/services.js'
+import PageLoader from '../components/PageLoader.jsx'
+import { fetchServices } from '../lib/content.js'
 
 function ServiceCard({ title, desc, price }) {
   return (
@@ -19,8 +21,22 @@ function ServiceCard({ title, desc, price }) {
 }
 
 export default function ServicesPage() {
-  const topRow = SERVICES.slice(0, 3)
-  const bottomRow = SERVICES.slice(3)
+  const [services, setServices] = useState(null)
+
+  useEffect(() => {
+    fetchServices().then(setServices)
+  }, [])
+
+  if (!services) {
+    return (
+      <Layout>
+        <PageLoader />
+      </Layout>
+    )
+  }
+
+  const topRow = services.slice(0, 3)
+  const bottomRow = services.slice(3)
 
   return (
     <Layout>
@@ -33,13 +49,23 @@ export default function ServicesPage() {
 
           <div className="mt-14 grid gap-10 md:grid-cols-3 md:gap-8 lg:gap-12">
             {topRow.map((s) => (
-              <ServiceCard key={s.id} title={s.title} desc={s.desc} price={s.price} />
+              <ServiceCard
+                key={s.id}
+                title={s.title}
+                desc={s.desc ?? s.description}
+                price={s.price}
+              />
             ))}
           </div>
 
           <div className="mx-auto mt-10 grid max-w-3xl gap-10 md:grid-cols-2 md:gap-8 lg:mt-12 lg:gap-12">
             {bottomRow.map((s) => (
-              <ServiceCard key={s.id} title={s.title} desc={s.desc} price={s.price} />
+              <ServiceCard
+                key={s.id}
+                title={s.title}
+                desc={s.desc ?? s.description}
+                price={s.price}
+              />
             ))}
           </div>
 

@@ -1,9 +1,9 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FOOTER_MENU_LINKS, FOOTER_SERVICES } from '../data/navigation.js'
 import { MESSENGER_URL } from '../config/contact.js'
+import { fetchServices, fetchSiteSettings } from '../lib/content.js'
 import Logo from './Logo.jsx'
-
-const HOTLINE = '123456789'
 
 function PinIcon() {
   return (
@@ -107,6 +107,22 @@ const SOCIAL_LINKS = [
 ]
 
 export default function Footer() {
+  const [settings, setSettings] = useState(null)
+  const [serviceLabels, setServiceLabels] = useState(FOOTER_SERVICES)
+
+  useEffect(() => {
+    Promise.all([fetchSiteSettings(), fetchServices()]).then(([s, svcs]) => {
+      setSettings(s)
+      if (svcs?.length) {
+        setServiceLabels(svcs.map((x) => x.title))
+      }
+    })
+  }, [])
+
+  const address = settings?.contact_address ?? 'Hòa Lạc, Hà Nội, Việt Nam'
+  const email = settings?.contact_email ?? 'admin@fpt.vn'
+  const hotline = settings?.hotline ?? '123456789'
+
   return (
     <footer className="relative overflow-hidden bg-[#0a1118] text-white">
       <div
@@ -123,12 +139,12 @@ export default function Footer() {
             <ul className="mt-5 space-y-3.5 text-sm text-white">
               <li className="flex gap-2.5">
                 <PinIcon />
-                <span>Hòa Lạc, Hà Nội, Việt Nam</span>
+                <span>{address}</span>
               </li>
               <li className="flex gap-2.5">
                 <MailIcon />
-                <a href="mailto:admin@fpt.vn" className="hover:text-vibez-orange">
-                  admin@fpt.vn
+                <a href={`mailto:${email}`} className="hover:text-vibez-orange">
+                  {email}
                 </a>
               </li>
             </ul>
@@ -139,7 +155,7 @@ export default function Footer() {
                 line2="Facebook Official"
                 external
               />
-              <FooterCta href={`tel:${HOTLINE}`} line1="Gọi ngay Hotline" line2={HOTLINE} />
+              <FooterCta href={`tel:${hotline}`} line1="Gọi ngay Hotline" line2={hotline} />
             </div>
           </div>
 
@@ -159,7 +175,7 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-bold">Dịch vụ của VibeZ</h3>
             <ul className="mt-6 space-y-3.5 text-sm text-white">
-              {FOOTER_SERVICES.map((s) => (
+              {serviceLabels.map((s) => (
                 <li key={s}>{s}</li>
               ))}
             </ul>

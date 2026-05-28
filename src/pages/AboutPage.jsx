@@ -1,10 +1,12 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Layout from '../components/Layout.jsx'
 import Logo from '../components/Logo.jsx'
+import { fetchSiteSettings } from '../lib/content.js'
 
 const PLACEHOLDER = 'Viết background kinh nghiệm ở đây'
 
-const MISSION_TEXT =
+const DEFAULT_MISSION =
   'Đội ngũ sáng lập của VibeZ là sự kết hợp của năm thành viên với chuyên môn bổ trợ lẫn nhau, tạo thành một bộ máy quản trị toàn diện từ chiến lược, vận hành, sản phẩm đến tài chính và truyền thông.'
 
 function ImageBlock({ className = '' }) {
@@ -12,6 +14,14 @@ function ImageBlock({ className = '' }) {
 }
 
 export default function AboutPage() {
+  const [missionText, setMissionText] = useState(DEFAULT_MISSION)
+
+  useEffect(() => {
+    fetchSiteSettings().then((s) => {
+      if (s?.mission_text) setMissionText(s.mission_text)
+    })
+  }, [])
+
   return (
     <Layout>
       <div className="bg-vibez-warm">
@@ -77,7 +87,7 @@ export default function AboutPage() {
           <div className="mx-auto max-w-5xl">
             <h2 className="text-center text-2xl font-bold text-gray-900 md:text-3xl">Sứ mệnh của VibeZ</h2>
             <div className="mt-10 grid items-center gap-8 md:grid-cols-[1fr_auto_1fr] md:gap-10 lg:gap-14">
-              <p className="text-sm leading-relaxed text-gray-800 md:text-base">{MISSION_TEXT}</p>
+              <p className="text-sm leading-relaxed text-gray-800 md:text-base">{missionText}</p>
               <div className="mx-auto h-1 w-16 bg-vibez-orange md:mx-0 md:h-28 md:w-1" aria-hidden />
               <div className="flex justify-center md:justify-end">
                 <Logo variant="horizontal" linked={false} />

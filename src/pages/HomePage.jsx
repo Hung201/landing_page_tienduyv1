@@ -1,8 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Layout from '../components/Layout.jsx'
-import { SERVICES } from '../data/services.js'
-import { NEWS_ITEMS } from '../data/news.js'
+import { fetchNews, fetchServices } from '../lib/content.js'
 
 function ImagePlaceholder({ className, label = 'THÊM ẢNH', dark = false }) {
   return (
@@ -56,6 +55,15 @@ function ServiceCard({ title, desc }) {
 export default function HomePage() {
   const [slide, setSlide] = useState(0)
   const [thumb, setThumb] = useState(0)
+  const [services, setServices] = useState([])
+  const [newsItems, setNewsItems] = useState([])
+
+  useEffect(() => {
+    Promise.all([fetchServices(), fetchNews()]).then(([s, n]) => {
+      setServices(s)
+      setNewsItems(n)
+    })
+  }, [])
 
   return (
     <Layout>
@@ -174,13 +182,13 @@ export default function HomePage() {
             Giải Pháp Cho Doanh Nghiệp
           </h2>
           <div className="mt-14 grid gap-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
-            {SERVICES.slice(0, 3).map((s) => (
-              <ServiceCard key={s.id} title={s.title} desc={s.desc} />
+            {services.slice(0, 3).map((s) => (
+              <ServiceCard key={s.id} title={s.title} desc={s.desc ?? s.description} />
             ))}
           </div>
           <div className="mt-12 grid gap-12 sm:grid-cols-2 lg:mx-auto lg:max-w-4xl lg:gap-10">
-            {SERVICES.slice(3).map((s) => (
-              <ServiceCard key={s.id} title={s.title} desc={s.desc} />
+            {services.slice(3).map((s) => (
+              <ServiceCard key={s.id} title={s.title} desc={s.desc ?? s.description} />
             ))}
           </div>
         </div>
@@ -195,7 +203,7 @@ export default function HomePage() {
             </h2>
           </div>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {NEWS_ITEMS.map((n) => (
+            {newsItems.slice(0, 4).map((n) => (
               <Link key={n.id} to={`/tin-tuc/${n.slug}`} className="group block">
                 <ImagePlaceholder className="aspect-square w-full" label="" />
                 <h3 className="mt-4 text-sm font-bold leading-snug text-vibez-navy group-hover:text-vibez-orange">
