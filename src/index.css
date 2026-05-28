@@ -1,12 +1,18 @@
 @import 'tailwindcss';
 
+/* Brand palette — Figma Main colors */
 @theme {
-  --color-vibez-orange: #f28c28;
-  --color-vibez-blue: #54a0ff;
-  --color-vibez-blue-dark: #3b7ddd;
-  --color-vibez-cream: #fff5eb;
-  --color-vibez-card: #e8e8e8;
-  --color-vibez-navy: #111827;
+  --color-vibez-orange: #ef7b15;
+  --color-vibez-white: #ffffff;
+  --color-vibez-navy: #152837;
+  --color-vibez-cream: #ffffff;
+  --color-vibez-beige: #f0ebe4;
+  --color-vibez-warm: #faf6f0;
+  --color-vibez-sky: #9fd4f5;
+  --color-vibez-sky-deep: #6eb8ea;
+  --color-vibez-card: #d9d9d9;
+  --color-vibez-card-dark: #b8b8b8;
+  --color-vibez-dark: #152837;
   --font-sans: 'Inter', system-ui, sans-serif;
 }
 
@@ -17,7 +23,28 @@ html {
 body {
   font-family: var(--font-sans);
   margin: 0;
-  color: #1f2937;
+  color: #152837;
+  background-color: #ffffff;
+}
+
+.nav-glow {
+  position: relative;
+}
+
+.nav-glow:hover,
+.nav-glow:focus-visible {
+  color: #ef7b15;
+  text-shadow:
+    0 0 8px rgba(239, 123, 21, 0.9),
+    0 0 16px rgba(239, 123, 21, 0.6),
+    0 0 28px rgba(239, 123, 21, 0.35);
+}
+
+.nav-glow-active {
+  color: #ef7b15;
+  text-shadow:
+    0 0 8px rgba(239, 123, 21, 0.7),
+    0 0 16px rgba(239, 123, 21, 0.4);
 }
 
 @keyframes chat-widget-pulse {

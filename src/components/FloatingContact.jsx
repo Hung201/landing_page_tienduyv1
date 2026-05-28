@@ -76,7 +76,7 @@ export default function FloatingContact() {
         aria-hidden={!open}
       >
         <div className="overflow-hidden rounded-2xl bg-white shadow-[0_16px_48px_rgba(0,0,0,0.18)] ring-1 ring-black/5">
-          <div className="bg-gradient-to-br from-vibez-orange to-[#ff9f43] px-4 py-4 text-white">
+          <div className="bg-gradient-to-br from-vibez-orange to-[#d96a10] px-4 py-4 text-white">
             <p className="text-base font-bold">Xin chào! 👋</p>
             <p className="mt-1 text-sm text-white/90">Chúng tôi sẵn sàng hỗ trợ bạn</p>
           </div>
@@ -102,7 +102,7 @@ export default function FloatingContact() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-label={open ? 'Đóng chat' : 'Mở chat hỗ trợ'}
-        className="relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-vibez-orange to-[#ff9f43] text-white shadow-[0_8px_28px_rgba(242,140,40,0.55)] transition hover:scale-105 hover:shadow-[0_12px_36px_rgba(242,140,40,0.65)] active:scale-95"
+        className="relative flex h-14 w-14 items-center justify-center rounded-full bg-vibez-orange text-white shadow-[0_8px_28px_rgba(239,123,21,0.55)] transition hover:scale-105 hover:shadow-[0_12px_36px_rgba(239,123,21,0.65)] active:scale-95"
       >
         {!open && <span className="chat-widget-pulse absolute inset-0 rounded-full bg-vibez-orange/50" />}
         {open ? <CloseIcon className="h-6 w-6" /> : <ChatIcon className="h-7 w-7" />}
