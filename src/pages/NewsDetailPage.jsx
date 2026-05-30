@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Layout from '../components/Layout.jsx'
 import PageLoader from '../components/PageLoader.jsx'
+import { NewsCoverImage, NewsBodyHtml } from '../components/NewsCoverImage.jsx'
 import { fetchNewsBySlug } from '../lib/content.js'
 
 export default function NewsDetailPage() {
@@ -47,10 +48,12 @@ export default function NewsDetailPage() {
 
       <article className="bg-vibez-warm px-4 py-12 sm:px-6">
         <div className="mx-auto max-w-3xl">
-          <div className="mb-8 aspect-video w-full rounded-2xl bg-[#cde7ff]" role="img" aria-label="Ảnh bài viết" />
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700 md:text-base">
-            {article.body || article.excerpt}
-          </p>
+          <NewsCoverImage
+            url={article.featured_image_url}
+            className="mb-8 aspect-video w-full rounded-2xl"
+            alt={article.title}
+          />
+          <NewsBodyHtml html={article.body || article.excerpt} />
           <Link
             to="/tin-tuc"
             className="mt-10 inline-block text-sm font-semibold text-vibez-orange hover:underline"

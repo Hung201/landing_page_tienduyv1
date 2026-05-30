@@ -25,6 +25,7 @@ function mapNewsRow(row) {
     excerpt: row.excerpt ?? '',
     body: row.body ?? '',
     date: row.date_display ?? '',
+    featured_image_url: row.featured_image_url ?? '',
     published: row.published,
     featured: row.featured,
     sort_order: row.sort_order,

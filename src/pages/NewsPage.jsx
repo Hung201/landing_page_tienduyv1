@@ -2,17 +2,18 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Layout from '../components/Layout.jsx'
 import PageLoader from '../components/PageLoader.jsx'
+import { NewsCoverImage, NewsBodyHtml } from '../components/NewsCoverImage.jsx'
 import { fetchNews } from '../lib/content.js'
 
 const CAROUSEL_DOTS = 5
 const VISIBLE_CARDS = 3
 
-function NewsImage({ className = '' }) {
+function NewsImage({ url, className = '', alt }) {
   return (
-    <div
-      className={`rounded-2xl bg-[#cde7ff] ${className}`}
-      role="img"
-      aria-label="Ảnh tin tức"
+    <NewsCoverImage
+      url={url}
+      alt={alt}
+      className={`rounded-2xl ${className}`}
     />
   )
 }
@@ -98,7 +99,7 @@ export default function NewsPage() {
                   key={`${item.id}-${i}`}
                   className="overflow-hidden rounded-2xl bg-white p-4 shadow-md"
                 >
-                  <NewsImage className="aspect-[4/3] w-full" />
+                  <NewsImage url={item.featured_image_url} className="aspect-[4/3] w-full" alt={item.title} />
                   <h3 className="mt-4 text-left text-sm font-bold text-vibez-navy md:text-base">
                     {item.title}
                   </h3>
@@ -141,7 +142,11 @@ export default function NewsPage() {
 
           {featuredArticle && (
             <article className="mb-14">
-              <NewsImage className="aspect-[21/9] w-full min-h-[200px]" />
+              <NewsImage
+                url={featuredArticle.featured_image_url}
+                className="aspect-[21/9] w-full min-h-[200px]"
+                alt={featuredArticle.title}
+              />
               <h3 className="mt-6 font-serif text-xl font-bold text-vibez-navy md:text-2xl">
                 {featuredArticle.title}
               </h3>
@@ -157,7 +162,11 @@ export default function NewsPage() {
           <div className="space-y-14">
             {listArticles.map((item) => (
               <article key={item.id}>
-                <NewsImage className="aspect-[16/10] w-full min-h-[180px]" />
+                <NewsImage
+                  url={item.featured_image_url}
+                  className="aspect-[16/10] w-full min-h-[180px]"
+                  alt={item.title}
+                />
                 <h3 className="mt-6 text-left text-lg font-bold text-vibez-navy">{item.title}</h3>
                 <p className="mt-3 text-left text-sm leading-relaxed text-gray-700">
                   {item.body ?? item.excerpt}

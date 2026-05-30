@@ -51,6 +51,13 @@ where id = (
 | `/admin/settings` | Sứ mệnh, liên hệ footer, intro FAQ |
 | `/admin/contacts` | Tin nhắn form Liên hệ |
 
-## Không có Supabase?
+## Cập nhật: ảnh đại diện + editor
+
+Nếu đã chạy `schema.sql` trước đó, chạy thêm file:
+
+`supabase/migrations/add_news_featured_image.sql`
+
+Tạo bucket **news-images** và cột `featured_image_url` trên bảng `news_posts`.
+
 
 Nếu chưa cấu hình `.env`, website vẫn chạy với dữ liệu mẫu trong `src/data/*.js`. Trang `/admin` sẽ báo thiếu cấu hình.

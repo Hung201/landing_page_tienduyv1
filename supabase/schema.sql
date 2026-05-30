@@ -34,6 +34,7 @@ create table if not exists public.news_posts (
   title text not null,
   excerpt text default '',
   body text default '',
+  featured_image_url text,
   date_display text,
   published boolean not null default true,
   featured boolean not null default false,
@@ -268,3 +269,29 @@ begin
     (g2, 'Do you offer on-site setup?', 'Included in premium packages.', 4),
     (g2, 'How are my wedding flowers delivered?', 'Temperature-controlled transport.', 5);
 end $$;
+
+-- Storage: ảnh đại diện tin tức
+insert into storage.buckets (id, name, public)
+values ('news-images', 'news-images', true)
+on conflict (id) do update set public = true;
+
+create policy "news_images_public_read"
+  on storage.objects for select
+  to anon, authenticated
+  using (bucket_id = 'news-images');
+
+create policy "news_images_admin_insert"
+  on storage.objects for insert
+  to authenticated
+  with check (bucket_id = 'news-images' and public.is_admin());
+
+create policy "news_images_admin_update"
+  on storage.objects for update
+  to authenticated
+  using (bucket_id = 'news-images' and public.is_admin())
+  with check (bucket_id = 'news-images' and public.is_admin());
+
+create policy "news_images_admin_delete"
+  on storage.objects for delete
+  to authenticated
+  using (bucket_id = 'news-images' and public.is_admin());

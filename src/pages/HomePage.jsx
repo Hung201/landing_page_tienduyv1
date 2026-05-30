@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Layout from '../components/Layout.jsx'
+import { NewsCoverImage } from '../components/NewsCoverImage.jsx'
 import { fetchNews, fetchServices } from '../lib/content.js'
 
 function ImagePlaceholder({ className, label = 'THÊM ẢNH', dark = false }) {
@@ -205,7 +206,11 @@ export default function HomePage() {
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {newsItems.slice(0, 4).map((n) => (
               <Link key={n.id} to={`/tin-tuc/${n.slug}`} className="group block">
-                <ImagePlaceholder className="aspect-square w-full" label="" />
+                <NewsCoverImage
+                  url={n.featured_image_url}
+                  className="aspect-square w-full rounded-md"
+                  alt={n.title}
+                />
                 <h3 className="mt-4 text-sm font-bold leading-snug text-vibez-navy group-hover:text-vibez-orange">
                   {n.title}
                 </h3>

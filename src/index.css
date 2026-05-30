@@ -65,3 +65,38 @@ body {
 .chat-widget-pulse {
   animation: chat-widget-pulse 2s ease-out infinite;
 }
+
+/* Nội dung bài viết (HTML từ editor) */
+.news-body h1,
+.news-body h2,
+.news-body h3 {
+  font-weight: 700;
+  color: #152837;
+  margin: 1em 0 0.5em;
+}
+
+.news-body p {
+  margin: 0.75em 0;
+  line-height: 1.7;
+}
+
+.news-body ul,
+.news-body ol {
+  margin: 0.75em 0;
+  padding-left: 1.5em;
+}
+
+.news-body a {
+  color: #ef7b15;
+  text-decoration: underline;
+}
+
+.news-body img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+}
+
+.rich-editor .ql-editor {
+  font-family: var(--font-sans);
+  font-size: 15px;
+}
